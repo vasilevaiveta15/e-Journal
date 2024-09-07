@@ -9,9 +9,10 @@ public class RegistrationStudent {
     private String password;
     private String repeatedPassword;
     private String role;
-    private String clas;
+    private String myClas;
     private String group;
-    private List<Long> subjectId;
+
+    private List<RequestSubj> requestSubj;
 
     public String getFirstName() {
         return firstName;
@@ -61,12 +62,12 @@ public class RegistrationStudent {
         this.role = role;
     }
 
-    public String getClas() {
-        return clas;
+    public String getMyClas() {
+        return myClas;
     }
 
-    public void setClas(String clas) {
-        this.clas = clas;
+    public void setMyClas(String myClas) {
+        this.myClas = myClas;
     }
 
     public String getGroup() {
@@ -77,11 +78,11 @@ public class RegistrationStudent {
         this.group = group;
     }
 
-    public List<Long> getSubjectId() {
-        return subjectId;
+    public List<RequestSubj> getRequestSubj() {
+        return requestSubj;
     }
 
-    public void setSubjectId(List<Long> subjectId) {
-        this.subjectId = subjectId;
+    public void setRequestSubj(List<RequestSubj> requestSubj) {
+        this.requestSubj = requestSubj;
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -32,9 +33,12 @@ public class JournalService {
         return journalDao.loadGrades(user.getId());
     }
 
-    public void addGrade(Grade grade) {
+    public void addGrade(Grade grade) throws IllegalAccessException {
         //check if the subjectId is mine
         Long id = journalDao.loadId(grade.getSubjectId(), grade.getStudentId());
+        if (null == id) {
+            throw new IllegalAccessException("Could not add grade!");
+        }
         journalDao.addGrade(grade.getGrade(), id);
     }
 
@@ -56,8 +60,10 @@ public class JournalService {
         registration.setPassword(passwordEncoder.encode(registration.getPassword()));
         Registration registration1 = setRegistration(registration);
         journalDao.createUser(registration1);
-        for (Long subjectId : registration.getSubjectId()) {
-            journalDao.createConnection(registration.getEmail(), subjectId);
+        for (RequestSubj requestSubj : registration.getRequestSubj()) {
+            for (Map.Entry<Long, Long> entry : requestSubj.getSubjects().entrySet()) {
+                journalDao.createConnection(registration.getEmail(), entry.getKey(), entry.getValue(), requestSubj.getClasss());
+            }
         }
     }
 
@@ -66,7 +72,7 @@ public class JournalService {
         registration.setPassword(passwordEncoder.encode(registration.getPassword()));
         journalDao.createUser(registration);
         if (Role.TEACHER.toString().equals(registration.getRole())) {
-            journalDao.createConnection(registration.getEmail(), registration.getSubjectId());
+            journalDao.createConnection(registration.getEmail(), registration.getSubjectId(), null, null);
         }
     }
 
@@ -100,7 +106,6 @@ public class JournalService {
         Teacher teacher2 = journalDao.loadMySubject(teacher.getId());
         teacher.setSubjectId(teacher2.getSubjectId());
         teacher.setSubjectName(teacher2.getSubjectName());
-        teacher.setTerm(teacher2.getTerm());
         return teacher;
     }
 
@@ -128,7 +133,7 @@ public class JournalService {
         registration1.setLastName(registration.getLastName());
         registration1.setGroup(registration.getGroup());
         registration1.setEmail(registration.getEmail());
-        registration1.setClas(registration.getClas());
+        registration1.setClas(registration.getMyClas());
         return registration1;
     }
 }

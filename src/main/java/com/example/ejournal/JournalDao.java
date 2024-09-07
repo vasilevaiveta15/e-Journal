@@ -32,7 +32,7 @@ public class JournalDao {
                 "         JOIN subjects s ON s.id = su.subject_id         " +
                 "         JOIN users u ON u.id = su.user_id               " +
                 "         LEFT JOIN grades g ON g.subject_user_id = su.id " +
-                "WHERE u.id = 1                                           ";
+                "WHERE u.id = :id                                         ";
 
         MapSqlParameterSource params = new MapSqlParameterSource("id", id);
         return namedTemplate.query(sql, params, (rs, rowNum) -> {
@@ -52,10 +52,12 @@ public class JournalDao {
     public Long loadId(Long subjectId,
                        Long studentId) {
         String sql = " " +
-                "SELECT id                      " +
-                "FROM subjects_users            " +
-                "WHERE subject_id = :subjectId  " +
-                "  AND user_id = :userId        ";
+                "SELECT su.id                                " +
+                "FROM subjects_users su                      " +
+                "         join users u on u.id = su.user_id  " +
+                "WHERE su.subject_id = :subjectId            " +
+                "  AND su.user_id = :userId                  " +
+                "  and u.class = su.class                    ";
 
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("subjectId", subjectId)
@@ -179,48 +181,51 @@ public class JournalDao {
     }
 
     public void createConnection(String email,
-                                 Long subjectId) {
+                                 Long subjectId,
+                                 Long term,
+                                 String classs) {
         String sql = ""
                 + "insert into subjects_users (user_id,     "
-                + "                    subject_id)          "
+                + "                    subject_id,          "
+                + "                    term,                "
+                + "                    class)               "
                 + " SELECT                                  "
                 + "    (SELECT u.id                         "
                 + "    FROM users u                         "
                 + "    WHERE u.email = :email)              "
                 + "    , :subjectId                         "
+                + "    , :term                              "
+                + "    , :class                             "
                 + " FROM dual                               ";
 
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("email", email)
-                .addValue("subjectId", subjectId);
+                .addValue("subjectId", subjectId)
+                .addValue("term", term)
+                .addValue("class", classs);
 
 
         namedTemplate.update(sql, params);
     }
 
     public void addSubject(Subject subject) {
-        String sql = "insert into subjects (name, term, year) VALUES(:name, :term, :year)";
+        String sql = "insert into subjects (name) VALUES(:name)";
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", subject.getName())
-                .addValue("term", subject.getTerm())
-                .addValue("year", subject.getYear());
+                .addValue("term", subject.getTerm());
         namedTemplate.update(sql, params);
     }
 
     public List<Subj> loadSubjects() {
         String sql = ""
                 + "SELECT id,       "
-                + "       name,     "
-                + "       term,     "
-                + "       year      "
+                + "       name      "
                 + "  FROM subjects  ";
 
         return namedTemplate.query(sql, new MapSqlParameterSource(), (rs, rowNum) -> {
             Subj s = new Subj();
             s.setId(rs.getLong("id"));
             s.setName(rs.getString("name"));
-            s.setTerm(rs.getLong("term"));
-            s.setYear(rs.getLong("year"));
             return s;
         });
 
@@ -229,8 +234,7 @@ public class JournalDao {
     public Teacher loadMySubject(Long id) {
         String sql = " " +
                 "select s.name AS name,                                  " +
-                "       s.id   AS id,                                    " +
-                "       s.term AS term                                   " +
+                "       s.id   AS id                                     " +
                 "from subjects s                                         " +
                 "         JOIN subjects_users su ON su.subject_id = s.id " +
                 "where su.user_id = :userId                              ";
@@ -241,7 +245,6 @@ public class JournalDao {
                 Teacher t = new Teacher();
                 t.setSubjectName(rs.getString("name"));
                 t.setSubjectId(rs.getLong("id"));
-                t.setTerm(rs.getLong("term"));
                 return t;
             });
         } catch (EmptyResultDataAccessException e) {

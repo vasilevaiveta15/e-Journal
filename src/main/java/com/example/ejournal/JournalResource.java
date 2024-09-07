@@ -24,8 +24,9 @@ public class JournalResource {
     public static final String REGISTRATION = "/api/be/e-journal/user/reg";
     public static final String REGISTRATION_STUDENT = "/api/be/e-journal/user/reg/student";
     public static final String ADD_SUBJECT = "/api/be/e-journal/subjects";
-        public static final String ROLE = "/api/be/e-journal/role";
-        public static final String PROFILE_TEACHER = "/api/be/e-journal/teacher-profile";
+    public static final String ROLE = "/api/be/e-journal/role";
+    public static final String PROFILE_TEACHER = "/api/be/e-journal/teacher-profile";
+    public static final String ADD_FINAL_GRADE = "/api/be/e-journal/final-grade";
 
     public JournalResource(JournalService journalService,
                            AuthService authService) {
@@ -60,7 +61,7 @@ public class JournalResource {
     @PreAuthorize("hasRole('TEACHER')")
     @PostMapping(GRADE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void addGrade(@RequestBody Grade grade) {
+    public void addGrade(@RequestBody Grade grade) throws IllegalAccessException {
         journalService.addGrade(grade);
     }
 
@@ -72,7 +73,7 @@ public class JournalResource {
     }
 
     //Rolqta za uchitelq e za da moje da vijda predmetite koito sushtestvuvat za da si izbira pri registraciq po kakvo shte prepodava
-//    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     @GetMapping(SUBJECTS)
     public List<Subj> loadSubjects() {
         return journalService.loadSubjects();
@@ -99,7 +100,7 @@ public class JournalResource {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(REGISTRATION_STUDENT)
     @ResponseStatus(HttpStatus.CREATED)
-    public void registrationStudent(@RequestBody RegistrationStudent registration) throws IllegalAccessException {
+    public void registrationStudent(@RequestBody RegistrationStudent registration) {
         journalService.registrationStudent(registration);
     }
 
@@ -109,7 +110,12 @@ public class JournalResource {
         return authService.authenticateUser(request.getUserPrincipal());
     }
 
-    //тодо трябва да преправя базата и срочната оценка да я преместя да е в subjects_gradesь
-    //тодо трябва да създам сървис с който да попълвам тази срочна оценка - АДМИН
-    //тодо трябва да създам сървис с който да оправя кашата за предметите-години-срокове и да е за АДМИН
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @PostMapping(ADD_FINAL_GRADE)
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public void addFinalGrade(@RequestParam Long subjectId,
+//                              @RequestParam Long userId) {
+//        journalService.addFinalGrade(subjectId, userId);
+//    }
+
 }

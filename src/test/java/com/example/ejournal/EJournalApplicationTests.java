@@ -145,12 +145,10 @@ class EJournalApplicationTests {
 
         RequestSubject requestSubject = new RequestSubject();
         Subject subject = new Subject();
-        subject.setYear(2020L);
         subject.setTerm(2L);
         subject.setName("Mathematics");
 
         Subject subject2 = new Subject();
-        subject2.setYear(2020L);
         subject2.setTerm(2L);
         subject.setName("Geography");
 
