@@ -73,7 +73,7 @@ public class JournalResource {
     }
 
     //Rolqta za uchitelq e za da moje da vijda predmetite koito sushtestvuvat za da si izbira pri registraciq po kakvo shte prepodava
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+//    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     @GetMapping(SUBJECTS)
     public List<Subj> loadSubjects() {
         return journalService.loadSubjects();

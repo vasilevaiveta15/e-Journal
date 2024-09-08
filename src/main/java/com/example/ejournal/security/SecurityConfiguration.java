@@ -44,7 +44,7 @@ public class SecurityConfiguration {
                 .authorizeRequests()
                 .mvcMatchers(HttpMethod.POST, "/api/be/e-journal/user/reg").permitAll()
                 .mvcMatchers(HttpMethod.POST, "/api/be/e-journal/token").permitAll()
-//                .mvcMatchers(HttpMethod.GET, "/api/be/e-journal/all-subjects").permitAll()
+                .mvcMatchers(HttpMethod.GET, "/api/be/e-journal/all-subjects").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .cors()
