@@ -100,10 +100,10 @@ public class JournalDao {
     public List<Student> loadAllStudents(Long userId) {
         String sql = " " +
                 " select u.name      AS userName,                            " +
-                "       u.last_name AS lastName,                             " +
-                "       u.class     AS class,                                " +
-                "       u.groupp    AS groupp,                               " +
-                "       u.id        AS id                                    " +
+                "        u.last_name AS lastName,                            " +
+                "        u.class     AS class,                               " +
+                "        u.groupp    AS groupp,                              " +
+                "        u.id        AS id                                   " +
                 "from users u                                                " +
                 "where id in (select user_id                                 " +
                 "             from subjects_users                            " +
@@ -117,6 +117,7 @@ public class JournalDao {
             student.setId(rs.getLong("id"));
             student.setName(rs.getString("userName"));
             student.setLastName(rs.getString("lastName"));
+            student.setClas(rs.getString("class"));
             student.setGroup(rs.getString("groupp"));
             return student;
         });
@@ -250,5 +251,22 @@ public class JournalDao {
         } catch (EmptyResultDataAccessException e) {
             return new Teacher();
         }
+    }
+
+    public void addFinalGrade(Long subjectId,
+                              Long userId,
+                              Long finalGrade) {
+        String sql = " " +
+                "update subjects_users                                                           " +
+                "set final_grade = :finalGrade                                                   " +
+                "where subject_id = :subjectId                                                   " +
+                "  and user_id = :userId                                                         " +
+                "  and class = (select class from users where id = :userId and role = 'STUDENT') ";
+
+        MapSqlParameterSource params = new MapSqlParameterSource("subjectId", subjectId)
+                .addValue("userId", userId)
+                .addValue("finalGrade", finalGrade);
+
+        namedTemplate.update(sql, params);
     }
 }

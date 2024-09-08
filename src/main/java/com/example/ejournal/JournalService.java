@@ -136,4 +136,10 @@ public class JournalService {
         registration1.setClas(registration.getMyClas());
         return registration1;
     }
+
+    public void addFinalGrade(Long subjectId,
+                              Long userId,
+                              Long finalGrade) {
+        journalDao.addFinalGrade(subjectId, userId, finalGrade);
+    }
 }

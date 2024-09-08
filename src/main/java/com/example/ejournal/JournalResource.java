@@ -110,12 +110,13 @@ public class JournalResource {
         return authService.authenticateUser(request.getUserPrincipal());
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
-//    @PostMapping(ADD_FINAL_GRADE)
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public void addFinalGrade(@RequestParam Long subjectId,
-//                              @RequestParam Long userId) {
-//        journalService.addFinalGrade(subjectId, userId);
-//    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping(ADD_FINAL_GRADE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addFinalGrade(@RequestParam Long subjectId,
+                              @RequestParam Long userId,
+                              @RequestParam Long finalGrade) {
+        journalService.addFinalGrade(subjectId, userId, finalGrade);
+    }
 
 }
