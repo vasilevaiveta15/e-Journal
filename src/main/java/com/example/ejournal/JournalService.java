@@ -142,4 +142,8 @@ public class JournalService {
                               Long finalGrade) {
         journalDao.addFinalGrade(subjectId, userId, finalGrade);
     }
+
+    public void nextYear() {
+        journalDao.nextYear();
+    }
 }

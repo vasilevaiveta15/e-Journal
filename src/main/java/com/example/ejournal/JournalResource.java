@@ -27,6 +27,7 @@ public class JournalResource {
     public static final String ROLE = "/api/be/e-journal/role";
     public static final String PROFILE_TEACHER = "/api/be/e-journal/teacher-profile";
     public static final String ADD_FINAL_GRADE = "/api/be/e-journal/final-grade";
+    public static final String NEXT_YEAR = "/api/be/e-journal/next-year";
 
     public JournalResource(JournalService journalService,
                            AuthService authService) {
@@ -118,5 +119,13 @@ public class JournalResource {
                               @RequestParam Long finalGrade) {
         journalService.addFinalGrade(subjectId, userId, finalGrade);
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping(NEXT_YEAR)
+    @ResponseStatus(HttpStatus.OK)
+    public void nextYear() {
+        journalService.nextYear();
+    }
+
 
 }

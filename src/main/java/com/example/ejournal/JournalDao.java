@@ -269,4 +269,16 @@ public class JournalDao {
 
         namedTemplate.update(sql, params);
     }
+
+    public void nextYear() {
+        String sql = "" +
+                " UPDATE users                                   " +
+                " SET class = CASE                               " +
+                "                 WHEN class < 12 THEN class + 1 " +
+                "                 ELSE class                     " +
+                "     END                                        " +
+                " WHERE role = 'STUDENT'                         ";
+
+        namedTemplate.update(sql, new MapSqlParameterSource());
+    }
 }
