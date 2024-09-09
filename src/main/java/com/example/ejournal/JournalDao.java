@@ -21,7 +21,8 @@ public class JournalDao {
 
     public List<Subject> loadGrades(Long id) {
         String sql = " " +
-                "SELECT s.name         AS name,                           " +
+                "SELECT s.id           AS id,                             " +
+                "       s.name         AS name,                           " +
                 "       su.term        AS term,                           " +
                 "       g.grade        AS grade,                          " +
                 "       su.class       AS class,                          " +
@@ -37,6 +38,7 @@ public class JournalDao {
         MapSqlParameterSource params = new MapSqlParameterSource("id", id);
         return namedTemplate.query(sql, params, (rs, rowNum) -> {
             Subject subject = new Subject();
+            subject.setSubjectId(rs.getLong("id"));
             subject.setName(rs.getString("name"));
             subject.setTerm(rs.getLong("term"));
             subject.setGrade(rs.getBigDecimal("grade"));
@@ -280,5 +282,27 @@ public class JournalDao {
                 " WHERE role = 'STUDENT'                         ";
 
         namedTemplate.update(sql, new MapSqlParameterSource());
+    }
+
+    public List<Student> loadAllUsers(String role) {
+        String sql = " " +
+                " SELECT id,         " +
+                "        name,       " +
+                "        last_name,  " +
+                "        class,      " +
+                "        groupp      " +
+                " FROM users         " +
+                " WHERE role = :role ";
+
+        MapSqlParameterSource params = new MapSqlParameterSource("role", role);
+        return namedTemplate.query(sql, params, (rs, rowNum) -> {
+            Student s = new Student();
+            s.setId(rs.getLong("id"));
+            s.setName(rs.getString("name"));
+            s.setLastName(rs.getString("last_name"));
+            s.setClas(rs.getString("class"));
+            s.setGroup(rs.getString("groupp"));
+            return s;
+        });
     }
 }

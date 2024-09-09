@@ -146,4 +146,17 @@ public class JournalService {
     public void nextYear() {
         journalDao.nextYear();
     }
+
+    public List<Student> loadAllStudentsForAdmin() {
+        List<Student> students = journalDao.loadAllUsers("STUDENT");
+        for (Student s : students) {
+            List<Subject> subject = journalDao.loadGrades(s.getId());
+            s.setSubjects(subject);
+        }
+        return students;
+    }
+
+    public List<Student> loadAllTeachersForAdmin() {
+        return journalDao.loadAllUsers("TEACHER");
+    }
 }

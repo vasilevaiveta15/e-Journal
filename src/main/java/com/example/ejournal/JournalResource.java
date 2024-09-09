@@ -19,6 +19,8 @@ public class JournalResource {
 
     public static final String LOAD_GRADES = "/api/be/e-journal/grades";
     public static final String LOAD_ALL_STUDENTS = "/api/be/e-journal/students";
+    public static final String LOAD_ALL_STUDENTS_ADMIN = "/api/be/e-journal/admin-students";
+    public static final String LOAD_ALL_TEACHERS_ADMIN = "/api/be/e-journal/admin-teachers";
     public static final String GRADE = "/api/be/e-journal/grade";
     public static final String SUBJECTS = "/api/be/e-journal/all-subjects";
     public static final String REGISTRATION = "/api/be/e-journal/user/reg";
@@ -57,6 +59,20 @@ public class JournalResource {
     @ResponseStatus(HttpStatus.OK)
     public List<Student> loadAllStudentsITeach(HttpServletRequest request) {
         return journalService.loadAllStudents(request.getUserPrincipal().getName());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(LOAD_ALL_STUDENTS_ADMIN)
+    @ResponseStatus(HttpStatus.OK)
+    public List<Student> loadAllStudentsForAdmin() {
+        return journalService.loadAllStudentsForAdmin();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(LOAD_ALL_TEACHERS_ADMIN)
+    @ResponseStatus(HttpStatus.OK)
+    public List<Student> loadAllTeachersForAdmin() {
+        return journalService.loadAllTeachersForAdmin();
     }
 
     @PreAuthorize("hasRole('TEACHER')")

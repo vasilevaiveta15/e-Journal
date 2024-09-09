@@ -3,6 +3,7 @@ package com.example.ejournal.bean;
 import java.math.BigDecimal;
 
 public class Subject {
+    private Long subjectId;
     private String name;
     private BigDecimal grade;
     private Long term;
@@ -11,6 +12,13 @@ public class Subject {
     private Long gradeId;
     private BigDecimal finalGrade;
 
+    public Long getSubjectId() {
+        return subjectId;
+    }
+
+    public void setSubjectId(Long subjectId) {
+        this.subjectId = subjectId;
+    }
 
     public String getName() {
         return name;
