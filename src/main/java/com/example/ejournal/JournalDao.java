@@ -52,18 +52,21 @@ public class JournalDao {
     }
 
     public Long loadId(Long subjectId,
-                       Long studentId) {
+                       Long studentId,
+                       Long term) {
         String sql = " " +
                 "SELECT su.id                                " +
                 "FROM subjects_users su                      " +
                 "         join users u on u.id = su.user_id  " +
                 "WHERE su.subject_id = :subjectId            " +
                 "  AND su.user_id = :userId                  " +
-                "  and u.class = su.class                    ";
+                "  and u.class = su.class                    " +
+                "  and su.term = :term                       ";
 
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("subjectId", subjectId)
-                .addValue("userId", studentId);
+                .addValue("userId", studentId)
+                .addValue("term", term);
         try {
             return namedTemplate.queryForObject(sql, params, Long.class);
         } catch (EmptyResultDataAccessException e) {

@@ -5,6 +5,7 @@ public class Grade {
     private Long grade;
     private Long subjectId;
     private Long gradeId;
+    private Long term;
 
     public Long getStudentId() {
         return studentId;
@@ -36,5 +37,13 @@ public class Grade {
 
     public void setGradeId(Long gradeId) {
         this.gradeId = gradeId;
+    }
+
+    public Long getTerm() {
+        return term;
+    }
+
+    public void setTerm(Long term) {
+        this.term = term;
     }
 }

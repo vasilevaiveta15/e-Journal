@@ -35,7 +35,7 @@ public class JournalService {
 
     public void addGrade(Grade grade) throws IllegalAccessException {
         //check if the subjectId is mine
-        Long id = journalDao.loadId(grade.getSubjectId(), grade.getStudentId());
+        Long id = journalDao.loadId(grade.getSubjectId(), grade.getStudentId(), grade.getTerm());
         if (null == id) {
             throw new IllegalAccessException("Could not add grade!");
         }
