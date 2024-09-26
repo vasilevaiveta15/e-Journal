@@ -29,7 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Transactional
 @AutoConfigureMockMvc
-//@Import(SecurityConfig.class)
 class EJournalApplicationTests {
 
     @Autowired
@@ -87,6 +86,7 @@ class EJournalApplicationTests {
         grade.setGrade(5L);
         grade.setStudentId(-112L);
         grade.setSubjectId(-98L);
+        grade.setTerm(1L);
 
         mockMvc.
                 perform(post(GRADE)
